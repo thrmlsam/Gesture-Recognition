@@ -15,10 +15,10 @@ public class Main {public static void main(String[] args) {
 		System.err.println("Could not instantiate AWT Robot");
 		return;
 	}
-	// Create a sample listener and controller
+	// Create a listener and controller
 	LeapMouseListener listener = new LeapMouseListener(robot);
 	Controller controller = new Controller();
-	// Have the sample listener receive events from the controller
+	// Have the listener receive events from the controller
 	controller.addListener(listener);
 	// Keep this process running until Enter is pressed
 	System.out.println("Press Enter to quit...");
@@ -27,7 +27,7 @@ public class Main {public static void main(String[] args) {
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
-	// Remove the sample listener when done
+	// Remove the listener when done
 	controller.removeListener(listener);
 }
 }

@@ -21,6 +21,7 @@ import com.leapmotion.leap.Vector;
 public class LeapMouseListener extends Listener{
 
 	private Robot robot;
+	//Move pointer only to the extend of screen
 	private Dimension screenDimension;
 	private boolean mouseClick = false;
 	private Vector indexPointer = null;
@@ -50,6 +51,7 @@ public class LeapMouseListener extends Listener{
 		
 		Frame frame = controller.frame();
 	
+		//if no hands present then return
 		if (frame.hands().count() ==0) {
 			this.indexPointer = null;
 			return;
@@ -68,13 +70,13 @@ public class LeapMouseListener extends Listener{
 				return;
 			}
 			Bone indexBone = indexFinger.bone(Bone.Type.TYPE_PROXIMAL);
-			float pinchDist = thumb.tipPosition().distanceTo(indexBone.center());
-			// System.out.println("pinchDist: " + pinchDist);
+			float indexDist = thumb.tipPosition().distanceTo(indexBone.center());
 			if (newPointer.getZ() > 0) {
 				this.indexPointer = null;
 				return;
 			}
-			if (pinchDist <= 25f) {
+			//if thumb is closer to index finger then left click. if thumb is released release left click
+			if (indexDist <= 25f) {
 				this.leftClick();
 			} else {
 				this.leftRelease();
@@ -87,6 +89,11 @@ public class LeapMouseListener extends Listener{
 				this.rightClick();
 			
 			}
+			}
+			
+			if (frame.hands().count() > 1){
+				Vector difference = newPointer.minus(indexPointer);
+				scrollMouse((int)difference.get(1));
 			}
 			 if (this.indexPointer != null) {
 				Vector difference = newPointer.minus(indexPointer);
@@ -144,12 +151,12 @@ public class LeapMouseListener extends Listener{
 		else
 			return val;
 	}
-	private void scrollMouse(int diff, Robot robot)
+	private void scrollMouse(int diff)
 	{
 	if(diff != 0)
 	{
 	diff = diff / Math.abs(diff);
-	robot.mouseWheel(diff);
+	this.robot.mouseWheel(diff);
 	}
 	}
 }
